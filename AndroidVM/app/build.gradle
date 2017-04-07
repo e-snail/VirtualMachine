@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
-//apply plugin: com.inject.PluginImpl
+apply plugin: com.inject.PluginImpl
 
 android {
 
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "androidvm"
+        applicationId "vm.androidvm"
         minSdkVersion 14
         targetSdkVersion 25
         versionCode 1

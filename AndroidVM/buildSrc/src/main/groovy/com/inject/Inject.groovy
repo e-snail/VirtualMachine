@@ -10,6 +10,7 @@ import javassist.NotFoundException
 import org.apache.commons.io.FileUtils
 import org.gjt.jclasslib.tools.DecodeClass
 
+import java.lang.reflect.Constructor
 import java.lang.reflect.Modifier
 
 /**
@@ -129,22 +130,24 @@ public class Inject {
             if (cls.isFrozen()) {
                 cls.defrost()
             }
-            String fullpath = path+"/"+className.replace('.','/')+".class";
-            String md5 = CoreString.getMD5(DecodeClass.decodeclass(fullpath));
-            if(out != null) {
-                out.write(model+":"+className+":"+md5)
-                out.newLine()
-                out.flush()
-            }
+//            String fullpath = path+"/"+className.replace('.','/')+".class";
+//            String md5 = CoreString.getMD5(DecodeClass.decodeclass(fullpath));
+//            if(out != null) {
+//                out.write(model+":"+className+":"+md5)
+//                out.newLine()
+//                out.flush()
+//            }
 
-            def init_constructor = cls.getConstructor("<init>");
-            init_constructor.insertAfter("System.out.println(\"<init>\" + getClass().name);");
+            def constructors = cls.getConstructors();
+            def constructor = constructors[0];
+            constructor.insertAfter("System.out.println(\"Class object initialization \" + getClass().getName());");
             cls.writeFile(path)
 
-            def clinit_constructor = cls.getDeclaredMethod("<clinit>");
-            clinit_constructor.insertAfter("System.out.println(\"<clinit>\" + getClass().name);");
-            cls.writeFile(path)
-
+//            Constructor[] cons = (Constructor[])constructors;
+//            for (Constructor constructor : cons) {
+//                constructor.insertAfter("System.out.println(\"Class object initialization \" + getClass().getName());");
+//                cls.writeFile(path)
+//            }
         }catch (NotFoundException e) {
             println("NotFoundException = "+e.getMessage())
         }catch (CannotCompileException e) {
